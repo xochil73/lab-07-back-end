@@ -4,7 +4,8 @@
 const express = require('express');
 const cors = require('cors');
 const superAgent = require('superagent');
-const weatherArray = [];
+let lat;
+let long;
 
 //Load env vars;
 require('dotenv').config();
@@ -14,12 +15,15 @@ const PORT = process.env.PORT || 3000;
 //app
 const app = express();
 app.use(cors());
+app.get('/location', getLocation);
 
 // Get Location data
-app.get('/location', (request, response) => {
-  const locationData = searchToLatLong(request.query.data || 'Lynnwood, WA');
-  response.send(locationData);
-})
+  function getLocation (request, response) {
+    return searchToLatLong(request.query.data)
+    .then(locationData => {
+      response.send(locationData)}
+      )
+  }
 
 // Get weather data
 app.get('/weather', (request, response) => {
@@ -36,6 +40,7 @@ function searchToLatLong(query){
   return superAgent.get(url)
     .then(geoData => {
       const location = new Location(geoData.body.results[0]);
+      console.log(location);
       return location;
     })
     .catch(err => console.error(err));
@@ -43,13 +48,12 @@ function searchToLatLong(query){
 }
 
 function searchWeather(query){
-  const url = `https://api.darksky.net/forecast/${process.env.DARKSKY_API_KEY}/47.85356789999999,-122.34211`;
-  // console.log(url);
-  // console.log(superAgent.get(url));
+  const url = `https://api.darksky.net/forecast/${process.env.DARKSKY_API_KEY}/44,122`;
+  // body.results.geometry.location. lat || lng
+  console.log(url);
+  // how to pull lat/long from google API, then format so we can input it into this URL  
   return superAgent.get(url)
     .then(weatherData => {
-      // console.log(weatherData.body.daily.data);
-      
       let wArr = weatherData.body.daily.data.map( 
           forecast => {
             let data = {};
@@ -58,10 +62,6 @@ function searchWeather(query){
             return data;
           }
         );
-        // for (let i in weatherData.daily.data){
-          //   const forecast = new Forecast(weatherData.daily.data[i]);
-      // }
-      console.log(wArr);
       return wArr;
     })
     .catch(err => console.error(err));
@@ -71,13 +71,8 @@ function Location(location){
   this.formatted_query = location.formatted_address;
   this.latitude = location.geometry.location.lat;
   this.longitude = location.geometry.location.lng;
-}
-
-function Forecast(weather){
-  this.forecast = weather.summary;
-  this.time = new Date(weather.time * 1000).toDateString(); //from stack overflow "convert unix string to time"
-
-  weatherArray.push(this);
+  // lat = location.geometry.location.lat;
+  // long = location.geometry.location.lng;
 }
 
 // Error messages

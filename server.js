@@ -48,7 +48,7 @@ function searchToLatLong(query){
 }
 
 function searchWeather(query){
-  const url = `https://api.darksky.net/forecast/${process.env.DARKSKY_API_KEY}/44,122`;
+  const url = `https://api.darksky.net/forecast/${process.env.DARKSKY_API_KEY}/${lat},${long}`;
   // body.results.geometry.location. lat || lng
   console.log(url);
   // how to pull lat/long from google API, then format so we can input it into this URL  
@@ -71,8 +71,8 @@ function Location(location){
   this.formatted_query = location.formatted_address;
   this.latitude = location.geometry.location.lat;
   this.longitude = location.geometry.location.lng;
-  // lat = location.geometry.location.lat;
-  // long = location.geometry.location.lng;
+  lat = location.geometry.location.lat;
+  long = location.geometry.location.lng;
 }
 
 // Error messages

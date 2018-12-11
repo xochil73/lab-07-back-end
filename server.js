@@ -18,21 +18,21 @@ app.use(cors());
 app.get('/location', getLocation);
 
 // Get Location data
-  function getLocation (request, response) {
-    return searchToLatLong(request.query.data)
+function getLocation (request, response) {
+  return searchToLatLong(request.query.data)
     .then(locationData => {
-      response.send(locationData)}
-      )
-  }
+      response.send(locationData);}
+    );
+}
 
 // Get weather data
 app.get('/weather', (request, response) => {
   searchWeather(request.query.data || 'Lynnwood, WA')
     .then(weatherData => {
       response.send(weatherData);
-    })
+    });
   // console.log(weatherGet);
-})
+});
 
 // from class
 function searchToLatLong(query){
@@ -44,24 +44,26 @@ function searchToLatLong(query){
       return location;
     })
     .catch(err => console.error(err));
-  
+
 }
+
+//yelp API you will have to use a .set inside, in the query function....
 
 function searchWeather(query){
   const url = `https://api.darksky.net/forecast/${process.env.DARKSKY_API_KEY}/${lat},${long}`;
   // body.results.geometry.location. lat || lng
   console.log(url);
-  // how to pull lat/long from google API, then format so we can input it into this URL  
+  // how to pull lat/long from google API, then format so we can input it into this URL
   return superAgent.get(url)
     .then(weatherData => {
-      let wArr = weatherData.body.daily.data.map( 
-          forecast => {
-            let data = {};
-            data.forecast = forecast.summary;
-            data.time = new Date(forecast.time * 1000).toDateString();
-            return data;
-          }
-        );
+      let wArr = weatherData.body.daily.data.map(
+        forecast => {
+          let data = {};
+          data.forecast = forecast.summary;
+          data.time = new Date(forecast.time * 1000).toDateString();
+          return data;
+        }
+      );
       return wArr;
     })
     .catch(err => console.error(err));
@@ -78,12 +80,12 @@ function Location(location){
 // Error messages
 app.get('/*', function(req, res) {
   res.status(404).send('halp, you are in the wrong place');
-})
+});
 
 function errorMessage(res){
   res.status(500).send('something went wrong. plzfix.');
 } //created a function to handle the 500 errors but not sure what to do with it
 
 app.listen(PORT, () => {
-  console.log(`app is up on port : ${PORT}`)
-})
+  console.log(`app is up on port : ${PORT}`);
+});

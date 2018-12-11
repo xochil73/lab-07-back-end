@@ -46,10 +46,10 @@ function getMov (request, response) {
 }
 
 function searchMovs(query) {
-  const url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${query}`;
+  const url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${query.formatted_query}`;
   return superAgent.get(url)
     .then(moviesData => {
-      console.log(moviesData.body);
+      // console.log(query);
       return moviesData.body.results.map(movie => new Movie(movie));
     });
 }
@@ -65,6 +65,31 @@ function Movie(movie) {
   }
   this.popularity = movie.popularity;
   this.released_on = movie.release_date;
+}
+//yelp-----------------------------------------------------------------------------------------------
+app.get('/yelp', getYelp);
+
+function getYelp (request, response){
+  return searchYelps(request.query.data)
+    .then(yelpData => {
+      response.send(yelpData);}
+    );
+}
+function searchYelps(query) {
+  const url = `GET https://api.yelp.com/v3/businesses/search?term=delis&latitude=${query.latitude}&longitude=${query.longitude}`;
+  return superAgent.get(url)
+    .set('Authorization', `Bearer ${process.env.YELP_API_KEY}`)
+    .then(yelpData => {
+      // console.log(yelpData.body.businesses);
+      return yelpData.body.businesses.map(bsns => new Bsns(bsns));
+    });
+}
+function Bsns (bsns){
+  this.name = bsns.name;
+  this.image_url = bsns.image_url;
+  this.price = bsns.price;
+  this.ratin5g = bsns.rating;
+  this.url = bsns.url;
 }
 
 

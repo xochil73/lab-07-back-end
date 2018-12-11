@@ -13,8 +13,18 @@ Number and name of feature: feAT 3 movies
 
 Estimate of time needed to complete: 1.5 hours
 Start time: 6pm
+Finish time: 640pm
+
+Actual time needed to complete:45min
+------------------------------------------------------------------------------------
+
+Number and name of feature: feAT 2 yelp
+
+Estimate of time needed to complete: 1.5 hours
+Start time: 7
 Finish time: 
 
 Actual time needed to complete:
 ------------------------------------------------------------------------------------
+
 

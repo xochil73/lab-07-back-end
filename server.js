@@ -46,7 +46,7 @@ function getMov (request, response) {
 }
 
 function searchMovs(query) {
-  const url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${query.formatted_query}`;
+  const url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${query}`;
   return superAgent.get(url)
     .then(moviesData => {
       // console.log(query);
@@ -76,13 +76,14 @@ function getYelp (request, response){
     );
 }
 function searchYelps(query) {
-  const url = `GET https://api.yelp.com/v3/businesses/search?term=delis&latitude=${query.latitude}&longitude=${query.longitude}`;
+  const url = `https://api.yelp.com/v3/businesses/search?term=delis&latitude=${query.latitude}&longitude=${query.longitude}`;
   return superAgent.get(url)
     .set('Authorization', `Bearer ${process.env.YELP_API_KEY}`)
     .then(yelpData => {
       // console.log(yelpData.body.businesses);
       return yelpData.body.businesses.map(bsns => new Bsns(bsns));
-    });
+    })
+    .catch(err => console.error(err));
 }
 function Bsns (bsns){
   this.name = bsns.name;

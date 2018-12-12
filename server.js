@@ -33,8 +33,6 @@ app.get('/weather', (request, response) => {
     });
   // console.log(weatherGet);
 });
-
-
 //movies-----------------------------
 app.get('/movies', getMov);
 //mov func
@@ -93,7 +91,6 @@ function Bsns (bsns){
   this.url = bsns.url;
 }
 
-
 // from class
 function searchToLatLong(query){
   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${query}&key=${process.env.GEOCODE_API_KEY}`;
@@ -106,6 +103,8 @@ function searchToLatLong(query){
     .catch(err => console.error(err));
 
 }
+
+//yelp API you will have to use a .set inside, in the query function....
 
 function searchWeather(query){
   const url = `https://api.darksky.net/forecast/${process.env.DARKSKY_API_KEY}/${lat},${long}`;
